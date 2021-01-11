@@ -1,8 +1,8 @@
 import { reactive, toRefs } from 'vue'
 import axios from 'axios'
 
-function useLoading(url: string) {
-    const data = reactive({
+function useLoading<T>(url: string) {
+    const data: { result: T | null; isloading: boolean; loaded: boolean; error: any } = reactive({
         isloading: true,
         loaded: false,
         result: null,

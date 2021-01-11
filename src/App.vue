@@ -4,17 +4,21 @@
   <button @click="increase">+1</button>
   <h1>x:{{ x }} y:{{ y }}</h1>
   <h1 v-if="isloading">isloading</h1>
-  <img v-if="loaded" :src="result.message" alt="">
+  <img v-if="loaded" :src="result.message" alt="" />
   <!-- <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/> -->
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, watch } from "vue";
 // import HelloWorld from "./components/HelloWorld.vue";
 
 import { ref, onMounted, onUnmounted } from "vue";
 import useMousePosition from "./hooks/useMousePosition";
 import useLoading from "./hooks/useLoading";
+interface DogResult {
+  message: string;
+  status: string;
+}
 export default defineComponent({
   name: "App",
   setup() {
@@ -24,7 +28,12 @@ export default defineComponent({
       count.value++;
     };
     const { x, y } = useMousePosition();
-    const { result, isloading, loaded } = useLoading("https://dog.ceo/api/breeds/image/random");
+    const { result, isloading, loaded } = useLoading<DogResult>(
+      "https://dog.ceo/api/breeds/image/random"
+    );
+    watch(result, () => {
+      console.log(result.value?.message);
+    });
     return {
       count,
       increase,
