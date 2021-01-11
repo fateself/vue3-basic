@@ -1,7 +1,10 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
+  <!-- <img alt="Vue logo" src="./assets/logo.png" /> -->
   <h1>{{ count }}</h1>
   <button @click="increase">+1</button>
+  <h1>x:{{ x }} y:{{ y }}</h1>
+  <h1 v-if="isloading">isloading</h1>
+  <img v-if="loaded" :src="result.message" alt="">
   <!-- <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/> -->
 </template>
 
@@ -9,18 +12,27 @@
 import { defineComponent } from "vue";
 // import HelloWorld from "./components/HelloWorld.vue";
 
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
+import useMousePosition from "./hooks/useMousePosition";
+import useLoading from "./hooks/useLoading";
 export default defineComponent({
   name: "App",
   setup() {
     const count = ref(0);
     const increase = () => {
-      console.log(count)
+      console.log(count);
       count.value++;
     };
+    const { x, y } = useMousePosition();
+    const { result, isloading, loaded } = useLoading("https://dog.ceo/api/breeds/image/random");
     return {
       count,
       increase,
+      x,
+      y,
+      result,
+      isloading,
+      loaded,
     };
   },
 });
